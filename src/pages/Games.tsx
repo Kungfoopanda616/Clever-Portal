@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Gamepad2, Search, Play } from "lucide-react";
-import { useGetLinks } from "@workspace/api-client-react";
+import { useGetLinks } from "@/hooks/use-links";
 import { useIframe } from "@/contexts/IframeContext";
 
 export default function Games() {
