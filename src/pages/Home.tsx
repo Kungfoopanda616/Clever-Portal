@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 import { Zap, Search, CornerDownLeft, Link2 } from "lucide-react";
 import Header from "@/components/layout/Header";
 
-// This is the line Vercel is looking for
+// This MUST be "export default" to fix the App.tsx build error
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Since you're hosting Ultraviolet on the same site
+  // Pointing to your local Ultraviolet folder in /public
   const PROXY_URL = "/uv/service/"; 
 
   const quickLinks = [
@@ -29,7 +29,7 @@ export default function Home() {
       targetUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
     }
 
-    // Encodes for Ultraviolet
+    // Encodes the URL for the Ultraviolet proxy
     window.location.href = `${PROXY_URL}${btoa(targetUrl)}`;
   };
 
@@ -90,29 +90,17 @@ export default function Home() {
              </form>
           </motion.div>
 
-          {/* Quick Links Section */}
-          <motion.div
-             initial={{ opacity: 0, y: 15 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ delay: 0.4 }}
-             className="space-y-6 pt-4"
-          >
-             <div className="flex items-center gap-3 text-red-600 font-bold text-xs tracking-[0.2em] uppercase opacity-80 justify-center">
-                <Zap className="w-4 h-4 fill-red-600" />
-                Quick Links
-             </div>
-
-             <div className="flex flex-wrap items-center gap-4 justify-center">
-                {quickLinks.map((link, i) => (
-                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer">
-                     <button className="flex items-center gap-3 px-8 py-4 bg-white/[0.03] hover:bg-white/[0.08] text-white font-bold rounded-2xl border border-white/5 hover:border-white/10 hover:-translate-y-1 transition-all">
-                        <Link2 className="w-5 h-5 text-gray-500" />
-                        {link.label}
-                     </button>
-                  </a>
-                ))}
-             </div>
-          </motion.div>
+          {/* Quick Links */}
+          <div className="flex flex-wrap items-center gap-4 justify-center">
+            {quickLinks.map((link, i) => (
+              <a key={i} href={link.url} target="_blank" rel="noopener noreferrer">
+                <button className="flex items-center gap-3 px-8 py-4 bg-white/[0.03] hover:bg-white/[0.08] text-white font-bold rounded-2xl border border-white/5 transition-all">
+                  <Link2 className="w-5 h-5 text-gray-500" />
+                  {link.label}
+                </button>
+              </a>
+            ))}
+          </div>
         </div>
       </main>
 
