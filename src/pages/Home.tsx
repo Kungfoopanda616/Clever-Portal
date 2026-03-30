@@ -6,6 +6,9 @@ import Header from "@/components/layout/Header";
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
 
+  // CHANGE THIS to your actual proxy URL (e.g., your Vercel/GitHub proxy link)
+  const PROXY_URL = "https://your-proxy-site.com/proxy?url=";
+
   const quickLinks = [
     { label: "Reddit", url: "https://www.reddit.com" },
     { label: "Gemini AI", url: "https://gemini.google.com" },
@@ -14,12 +17,21 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      // If it looks like a URL, go there. Otherwise, search Google.
-      const isUrl = searchQuery.includes('.') && !searchQuery.includes(' ');
-      const url = isUrl ? (searchQuery.startsWith('http') ? searchQuery : `https://${searchQuery}`) : `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
-      window.location.href = url;
+    if (!searchQuery.trim()) return;
+
+    let targetUrl = "";
+    const isUrl = searchQuery.includes('.') && !searchQuery.includes(' ');
+
+    if (isUrl) {
+      // If it's a direct URL, format it correctly
+      targetUrl = searchQuery.startsWith('http') ? searchQuery : `https://${searchQuery}`;
+    } else {
+      // If it's a search term, send it to Google via the proxy
+      targetUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
     }
+
+    // This redirects the search THROUGH your proxy
+    window.location.href = `${PROXY_URL}${encodeURIComponent(targetUrl)}`;
   };
 
   return (
@@ -57,7 +69,7 @@ export default function Home() {
              </motion.h1>
           </div>
 
-          {/* Search Bar */}
+          {/* Proxy Search Bar */}
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -70,7 +82,7 @@ export default function Home() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search the web or enter URL..."
+                  placeholder="Search via proxy..."
                   className="w-full bg-card/40 backdrop-blur-md p-7 pl-16 pr-20 text-xl rounded-full border border-white/5 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 transition-all placeholder:text-muted-foreground/30 shadow-2xl shadow-black/40"
                 />
                 
