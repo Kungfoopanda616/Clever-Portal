@@ -1,142 +1,102 @@
 import { motion } from "framer-motion";
-import { Gamepad2, LayoutGrid, Zap, Shield, Globe } from "lucide-react";
-import { Link } from "wouter";
-import { useGetLinks } from "@/hooks/use-links";
+import { Zap, Search, CornerDownLeft, Link2 } from "lucide-react";
+import Header from "@/components/layout/Header";
 
 export default function Home() {
-  const { data: links = [] } = useGetLinks();
-  
-  const gameCount = links.filter(l => l.category === "games").length;
-  const appCount = links.filter(l => l.category === "apps").length;
-
-  const features = [
-    {
-      icon: <Zap className="w-6 h-6" />,
-      title: "Lightning Fast",
-      description: "Optimized for speed so you can get straight to the action."
-    },
-    {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Unblocked Access",
-      description: "Designed to work anywhere, anytime, without restrictions."
-    },
-    {
-      icon: <Globe className="w-6 h-6" />,
-      title: "Clean Interface",
-      description: "A distraction-free experience for your favorite web apps."
-    }
+  const quickLinks = [
+    { label: "Reddit", url: "https://www.reddit.com" },
+    { label: "Gemini AI", url: "https://gemini.google.com" },
+    { label: "Youtube", url: "https://www.youtube.com" },
   ];
 
   return (
-    <div className="space-y-24 pb-20">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-transparent" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8"
-            >
-              <Zap className="w-4 h-4" />
-              Welcome to the Next Generation
-            </motion.div>
-            
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-6xl md:text-7xl font-display font-bold mb-6 tracking-tight"
-            >
-              Your Portal to <span className="text-primary">Everything.</span>
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-muted-foreground mb-10 leading-relaxed"
-            >
-              A high-performance hub for unblocked games and essential web applications. 
-              Built for speed, privacy, and seamless access.
-            </motion.p>
+    <div className="min-h-screen bg-background relative flex flex-col">
+      <Header />
+      
+      {/* Background Glow */}
+      <div className="absolute inset-0 top-32 flex justify-center overflow-hidden pointer-events-none">
+         <div className="w-[1000px] h-[600px] bg-primary/10 blur-[160px] rounded-full opacity-40" />
+      </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              <Link href="/games">
-                <button className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground rounded-2xl font-bold text-lg hover:shadow-lg hover:shadow-primary/20 transition-all active:scale-95 flex items-center justify-center gap-2">
-                  <Gamepad2 className="w-5 h-5" />
-                  Play Games
-                </button>
-              </Link>
-              <Link href="/apps">
-                <button className="w-full sm:w-auto px-8 py-4 bg-card border border-white/10 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all active:scale-95 flex items-center justify-center gap-2">
-                  <LayoutGrid className="w-5 h-5" />
-                  Launch Apps
-                </button>
-              </Link>
-            </motion.div>
+      <main className="flex-grow flex flex-col items-center justify-center p-6 pb-20 pt-16 relative z-10">
+        <div className="max-w-3xl w-full text-center space-y-16">
+          
+          {/* Logo Section */}
+          <div className="space-y-6">
+             {/* Glowing Icon */}
+             <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-primary mx-auto shadow-inner group transition-all"
+             >
+                <div className="relative">
+                   <Zap className="w-8 h-8 relative z-10 fill-primary" />
+                   <div className="absolute inset-0 w-8 h-8 bg-primary blur-lg opacity-60" />
+                </div>
+             </motion.div>
+
+             {/* Main Title - Just "Epstien" */}
+             <motion.h1
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.1 }}
+               className="text-[120px] font-display font-bold text-primary leading-[100px] tracking-tighter drop-shadow-2xl"
+             >
+               Epstien
+             </motion.h1>
           </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="p-8 bg-card rounded-3xl border border-white/5 relative group hover:border-primary/50 transition-colors"
-            >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                {feature.icon}
-              </div>
-              <h3 className="text-xl font-display font-bold mb-3">{feature.title}</h3>
-              <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
+          {/* Search Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="w-full relative group"
+          >
+             <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-muted-foreground group-focus-within:text-primary transition-colors" />
+             <input
+               type="text"
+               placeholder="Search the web or enter URL..."
+               className="w-full bg-card/40 backdrop-blur-md p-7 pl-16 pr-20 text-xl rounded-full border border-white/5 outline-none focus:border-primary/40 focus:ring-4 focus:ring-primary/5 transition-all placeholder:text-muted-foreground/30 shadow-2xl shadow-black/40"
+             />
+             
+             <button className="absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-background border border-white/5 text-muted-foreground/60 hover:text-foreground transition-colors shadow-sm">
+                <CornerDownLeft className="w-5 h-5" />
+             </button>
+          </motion.div>
 
-      {/* Quick Access Info */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="bg-primary/10 border border-primary/20 rounded-[2rem] p-12 relative overflow-hidden">
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-96 h-96 bg-primary/20 blur-[120px] rounded-full" />
-          <div className="relative z-10 grid md:grid-cols-2 items-center gap-12">
-            <div>
-              <h2 className="text-4xl font-display font-bold mb-6">Explore the library</h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Currently hosting <span className="text-primary font-bold">{gameCount} games</span> and <span className="text-primary font-bold">{appCount} apps</span>. 
-                Everything is pre-configured and ready to use immediately.
-              </p>
-              <Link href="/games">
-                <span className="text-primary font-bold hover:underline cursor-pointer flex items-center gap-2">
-                  View full library <Zap className="w-4 h-4" />
-                </span>
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               <div className="aspect-square bg-card/50 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center p-4">
-                  <span className="text-3xl font-display font-bold text-primary mb-1">{gameCount}</span>
-                  <span className="text-sm text-muted-foreground">Games</span>
-               </div>
-               <div className="aspect-square bg-card/50 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center p-4">
-                  <span className="text-3xl font-display font-bold text-primary mb-1">{appCount}</span>
-                  <span className="text-sm text-muted-foreground">Apps</span>
-               </div>
-            </div>
-          </div>
+          {/* Quick Links Section */}
+          <motion.div
+             initial={{ opacity: 0, y: 15 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.4 }}
+             className="space-y-6 pt-4"
+          >
+             <div className="flex items-center gap-3 text-destructive font-bold text-xs tracking-[0.2em] uppercase opacity-80">
+                <Zap className="w-4 h-4 fill-destructive" />
+                Quick Links
+             </div>
+
+             <div className="flex flex-wrap items-center gap-4 justify-center">
+                {quickLinks.map((link, i) => (
+                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer">
+                     <button className="flex items-center gap-3 px-8 py-4 bg-white/[0.03] hover:bg-white/[0.08] text-foreground/90 font-bold rounded-2xl border border-white/5 hover:border-white/10 hover:-translate-y-1 transition-all shadow-lg active:scale-95">
+                        <Link2 className="w-5 h-5 text-muted-foreground/50" />
+                        {link.label}
+                     </button>
+                  </a>
+                ))}
+             </div>
+          </motion.div>
         </div>
-      </section>
+      </main>
+
+      {/* Footer / Owner */}
+      <footer className="w-full p-8 text-center mt-auto">
+         <span className="text-xs text-muted-foreground/40 font-semibold tracking-widest uppercase">
+           Owner: Slim/Emery B
+         </span>
+      </footer>
     </div>
   );
 }
