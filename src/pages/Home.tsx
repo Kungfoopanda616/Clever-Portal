@@ -1,6 +1,7 @@
-// Inside your Home.tsx
-// Replace the old placeholder with your new Ultraviolet link + /uv/service/
-const PROXY_URL = "https://your-new-uv-link.vercel.app/uv/service/"; 
+// Inside src/pages/Home.tsx
+
+// Since it's on the SAME site, we use a relative path
+const PROXY_URL = "/uv/service/"; 
 
 const handleSearch = (e: React.FormEvent) => {
   e.preventDefault();
@@ -15,7 +16,7 @@ const handleSearch = (e: React.FormEvent) => {
     targetUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
   }
 
-  // Ultraviolet uses a special "Xor" encoding for URLs. 
-  // For most basic setups, this simple redirect works:
-  window.location.href = `${PROXY_URL}${btoa(targetUrl)}`; 
+  // Ultraviolet needs the URL to be encoded. 
+  // 'btoa' turns it into Base64 so the browser doesn't get confused.
+  window.location.href = `${PROXY_URL}${btoa(targetUrl)}`;
 };
