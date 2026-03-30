@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/uv/(.*)",
-      "destination": "/uv/$1"
+      "source": "/uv/service/(.*)",
+      "destination": "/uv/uv.sw.js"
     },
     {
       "source": "/(.*)",
