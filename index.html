@@ -7,7 +7,9 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/uv/uv.sw.js', {
         scope: '/uv/service/'
-      }).then(() => console.log('Epstien Engine: Active'));
+      }).then(() => {
+        console.log('Epstien Engine: Active and Ready');
+      });
     });
   }
 </script>
