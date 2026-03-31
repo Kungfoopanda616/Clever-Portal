@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, CornerDownLeft } from "lucide-react";
 import Header from "@/components/layout/Header";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
+
+  // This forces the engine to start the moment the page loads
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/uv/uv.sw.js", {
+        scope: "/uv/service/",
+      }).then(() => {
+        console.log("Epstien Engine: Active");
+      }).catch((err) => {
+        console.error("Engine failed to start:", err);
+      });
+    }
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +39,7 @@ export default function Home() {
         .join("")
     );
 
+    // Redirect to the proxy
     window.location.href = `/uv/service/${encodedUrl}`;
   };
 
