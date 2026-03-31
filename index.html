@@ -1,15 +1,15 @@
-<div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-
-    <script src="/uv/uv.bundle.js"></script>
-    <script src="/uv/uv.config.js"></script>
-    <script>
-      // This checks if the files actually loaded before trying to use them
-      if (typeof Ultraviolet !== 'undefined' && 'serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/uv/uv.sw.js', {
-          scope: '/uv/service/'
-        });
-      }
-    </script>
-  </body>
-</html>
+<script src="/uv/uv.bundle.js"></script>
+<script src="/uv/uv.config.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/uv/uv.sw.js', {
+        scope: '/uv/service/'
+      }).then(() => {
+        console.log('UV Service Worker registered!');
+      }).catch(err => {
+        console.error('SW Registration failed:', err);
+      });
+    });
+  }
+</script>
