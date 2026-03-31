@@ -1,14 +1,15 @@
 <script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
 <script>
+  // This registers the proxy engine
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/uv/uv.sw.js', {
         scope: '/uv/service/'
       }).then(() => {
-        console.log('UV Service Worker registered!');
+        console.log('Epstien Portal: Engine Started');
       }).catch(err => {
-        console.error('SW Registration failed:', err);
+        console.error('Engine Failed:', err);
       });
     });
   }
