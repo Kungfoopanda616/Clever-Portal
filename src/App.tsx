@@ -1,8 +1,8 @@
 import { Route, Switch } from "wouter";
-import Home from "@/pages/Home"; // This line is what failed in your logs
+import Home from "@/pages/Home";
 import Admin from "@/pages/Admin";
 
-function App() {
+export default function App() {
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -10,5 +10,3 @@ function App() {
     </Switch>
   );
 }
-
-export default App;
