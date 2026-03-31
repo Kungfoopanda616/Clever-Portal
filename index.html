@@ -1,17 +1,13 @@
-<script src="/uv/uv.bundle.js"></script>
 <script src="/uv/uv.config.js"></script>
+<script src="/uv/uv.bundle.js"></script>
+<script src="/uv/uv.handler.js"></script>
+
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/uv/uv.sw.js', {
         scope: '/uv/service/'
-      }).then((registration) => {
-        // This forces the engine to start immediately
-        registration.update();
-        console.log('Engine Ready');
-      }).catch(err => {
-        console.error('Engine Failed:', err);
-      });
+      }).then(() => console.log('Epstien Engine: Active'));
     });
   }
 </script>
