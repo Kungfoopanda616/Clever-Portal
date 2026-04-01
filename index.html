@@ -1,13 +1,9 @@
-<script src="/uv/uv.bundle.js"></script>
-<script src="/uv/uv.config.js"></script>
-<script src="/uv/uv.handler.js"></script>
+<body>
+  <div id="root"></div> <script src="/uv/uv.bundle.js"></script>
+  
+  <script src="/uv/uv.config.js"></script>
+  
+  <script src="/uv/uv.handler.js"></script>
 
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/uv/uv.sw.js', {
-        scope: '/uv/service/'
-      }).then(() => console.log('Engine: Active'));
-    });
-  }
-</script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
