@@ -1,15 +1,14 @@
-<script src="/uv/uv.config.js"></script>
-<script src="/uv/uv.bundle.js"></script>
-<script src="/uv/uv.handler.js"></script>
-
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/uv/uv.sw.js', {
-        scope: '/uv/service/'
-      }).then(() => {
-        console.log('Epstien Engine: Active and Ready');
-      });
-    });
-  }
-</script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Epstien</title>
+  </head>
+  <body>
+    <div id="root"></div> <script src="/uv/uv.config.js"></script>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.handler.js"></script>
+    <script type="module" src="/src/main.tsx"></script> 
+  </body>
+</html>
