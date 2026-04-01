@@ -1,8 +1,12 @@
-importScripts('uv.bundle.js');
-importScripts('uv.config.js');
+// uv.sw.js
+// Import UV bundle and config in order
+importScripts('/uv/uv.bundle.js');
+importScripts('/uv/uv.config.js');
 
-const sw = new UVServiceWorker();
-
-self.addEventListener('fetch', (event) => {
-    event.respondWith(sw.fetch(event));
-});
+// Initialize UVServiceWorker if available
+if (self.UVServiceWorker) {
+  self.uvWorker = new UVServiceWorker();
+  console.log('UVServiceWorker instantiated.');
+} else {
+  console.error('UVServiceWorker is not defined.');
+}
