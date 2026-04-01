@@ -1,9 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My UV App</title>
+</head>
 <body>
-  <div id="root"></div> <script src="/uv/uv.bundle.js"></script>
+  <!-- Your app content -->
 
-  <script src="/uv/uv.config.js"></script>
+  <!-- Load UV bundle script -->
+  <script src="/uv/uv.bundle.js"></script>
 
-  <script src="/uv/uv.handler.js"></script>
-
-  <script type="module" src="/src/main.tsx"></script>
+  <!-- Register Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch(error => {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    }
+  </script>
 </body>
+</html>
