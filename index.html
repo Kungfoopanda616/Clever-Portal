@@ -2,42 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Proxy URL Searcher</title>
+  <title>UV Proxy</title>
 </head>
 <body>
-  <h1>Proxy URL Searcher</h1>
+  <h1>UV Proxy</h1>
   <div id="status">Loading...</div>
 
   <!-- Load UV bundle -->
   <script src="/uv/uv.bundle.js"></script>
 
-  <!-- Initialize your app after page loads -->
   <script>
     window.onload = () => {
       document.getElementById('status').textContent = 'Initializing...';
 
-      // Check if UV is loaded
+      // Check UV loaded
       if (typeof UV !== 'undefined') {
-        document.getElementById('status').textContent = 'UV loaded successfully';
-
-        // Initialize UV or your searcher here
-        // Example: UV.setup() or your custom code
-        if (typeof UV.setup === 'function') {
-          UV.setup(); // replace with actual initialization if needed
-        }
+        document.getElementById('status').textContent = 'UV loaded!';
+        // Initialize UV or your proxy logic here
+        // For example, UV.setup() if needed
       } else {
-        document.getElementById('status').textContent = 'Failed to load UV';
-        console.error('UV not loaded');
+        document.getElementById('status').textContent = 'Failed to load UV.';
+        console.error('UV not loaded.');
       }
 
-      // Register service worker
+      // Register Service Worker
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('/uv/uv.sw.js')
           .then(reg => {
             console.log('Service Worker registered:', reg);
           })
-          .catch(error => {
-            console.error('Service Worker registration failed:', error);
+          .catch(err => {
+            console.error('Service Worker registration failed:', err);
           });
       }
     };
