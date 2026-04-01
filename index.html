@@ -2,37 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UV App</title>
+  <title>Proxy URL Searcher</title>
 </head>
 <body>
-  <h1>Loading UV App...</h1>
+  <h1>Proxy URL Searcher</h1>
+  <div id="status">Loading...</div>
 
   <!-- Load UV bundle -->
   <script src="/uv/uv.bundle.js"></script>
 
-  <!-- Register Service Worker -->
+  <!-- Initialize your app after page loads -->
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
+    window.onload = () => {
+      document.getElementById('status').textContent = 'Initializing...';
+
+      // Check if UV is loaded
+      if (typeof UV !== 'undefined') {
+        document.getElementById('status').textContent = 'UV loaded successfully';
+
+        // Initialize UV or your searcher here
+        // Example: UV.setup() or your custom code
+        if (typeof UV.setup === 'function') {
+          UV.setup(); // replace with actual initialization if needed
+        }
+      } else {
+        document.getElementById('status').textContent = 'Failed to load UV';
+        console.error('UV not loaded');
+      }
+
+      // Register service worker
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
           .then(reg => {
             console.log('Service Worker registered:', reg);
           })
           .catch(error => {
-            console.log('Service Worker registration failed:', error);
+            console.error('Service Worker registration failed:', error);
           });
-      });
-    }
-  </script>
-
-  <!-- Setup message listener if needed (example for extension messaging) -->
-  <script>
-    // Example: Listening for messages (if your app uses extension messaging)
-    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-      console.log('Received message:', request);
-      // handle the message
-    });
+      }
+    };
   </script>
 </body>
 </html>
