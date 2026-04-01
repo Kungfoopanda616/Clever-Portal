@@ -1,4 +1,3 @@
-// Basic service worker setup
 self.addEventListener('install', event => {
   console.log('Service Worker installing.');
   self.skipWaiting();
@@ -9,6 +8,6 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // For now, just fetch from network
+  // You can add caching logic here
   event.respondWith(fetch(event.request));
 });
