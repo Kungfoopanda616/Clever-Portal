@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My UV App</title>
+  <title>UV App</title>
 </head>
 <body>
-  <!-- Your app content -->
+  <h1>Loading UV App...</h1>
 
-  <!-- Load UV bundle script -->
+  <!-- Load UV bundle -->
   <script src="/uv/uv.bundle.js"></script>
 
   <!-- Register Service Worker -->
@@ -16,14 +16,23 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
-          .then(registration => {
-            console.log('Service Worker registered with scope:', registration.scope);
+          .then(reg => {
+            console.log('Service Worker registered:', reg);
           })
           .catch(error => {
             console.log('Service Worker registration failed:', error);
           });
       });
     }
+  </script>
+
+  <!-- Setup message listener if needed (example for extension messaging) -->
+  <script>
+    // Example: Listening for messages (if your app uses extension messaging)
+    chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+      console.log('Received message:', request);
+      // handle the message
+    });
   </script>
 </body>
 </html>
