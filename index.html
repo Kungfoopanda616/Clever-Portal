@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>UV Proxy</title>
+  <title>Epstein</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,6 +10,45 @@
       margin: 0 auto;
       padding: 20px;
       text-align: center;
+      background-color: #f5f5f5;
+    }
+    .header {
+      background-color: #333;
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .tab {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .tab:hover {
+      background-color: #45a049;
+    }
+    .tab.active {
+      background-color: #2196F3;
+    }
+    .tab-content {
+      display: none;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .tab-content.active {
+      display: block;
     }
     .search-container {
       margin: 20px 0;
@@ -42,21 +81,208 @@
       margin: 20px 0;
       font-weight: bold;
     }
+    .admin-login {
+      margin: 20px 0;
+    }
+    #admin-password {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    #admin-login-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #admin-login-btn:hover {
+      background-color: #e68900;
+    }
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .game-item {
+      background-color: #e0e0e0;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .game-item:hover {
+      transform: scale(1.05);
+    }
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .app-item {
+      background-color: #e0e0e0;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .app-item:hover {
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
-  <h1>UV Proxy</h1>
-  <div id="status">Loading...</div>
+  <div class="header">
+    <h1>Epstein</h1>
+  </div>
   
-  <div class="search-container">
-    <input type="text" id="search-input" placeholder="Enter URL or search..." />
-    <button id="search-btn">Go</button>
+  <div class="nav-tabs">
+    <button class="tab active" onclick="showTab('search')">Search</button>
+    <button class="tab" onclick="showTab('games')">Games</button>
+    <button class="tab" onclick="showTab('apps')">Apps</button>
+    <button class="tab" onclick="showTab('admin')">Admin</button>
+  </div>
+
+  <!-- Search Tab -->
+  <div id="search-tab" class="tab-content active">
+    <div id="status">Loading...</div>
+    
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Enter URL or search..." />
+      <button id="search-btn">Go</button>
+    </div>
+  </div>
+
+  <!-- Games Tab -->
+  <div id="games-tab" class="tab-content">
+    <h2>Games</h2>
+    <div class="game-grid">
+      <div class="game-item" onclick="openGame('https://scratch.mit.edu')">
+        <h3>Scratch</h3>
+        <p>Create and share interactive stories, games, and animations</p>
+      </div>
+      <div class="game-item" onclick="openGame('https://poki.com')">
+        <h3>Poki</h3>
+        <p>Free online games</p>
+      </div>
+      <div class="game-item" onclick="openGame('https://coolmathgames.com')">
+        <h3>Cool Math Games</h3>
+        <p>Fun and educational games</p>
+      </div>
+      <div class="game-item" onclick="openGame('https://iogames.space')">
+        <h3>IO Games</h3>
+        <p>Multiplayer IO games</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Apps Tab -->
+  <div id="apps-tab" class="tab-content">
+    <h2>Apps</h2>
+    <div class="app-grid">
+      <div class="app-item" onclick="openApp('https://discord.com')">
+        <h3>Discord</h3>
+        <p>Chat and voice communication</p>
+      </div>
+      <div class="app-item" onclick="openApp('https://youtube.com')">
+        <h3>YouTube</h3>
+        <p>Video sharing platform</p>
+      </div>
+      <div class="app-item" onclick="openApp('https://spotify.com')">
+        <h3>Spotify</h3>
+        <p>Music streaming</p>
+      </div>
+      <div class="app-item" onclick="openApp('https://github.com')">
+        <h3>GitHub</h3>
+        <p>Code hosting platform</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Tab -->
+  <div id="admin-tab" class="tab-content">
+    <h2>Admin Panel</h2>
+    <div class="admin-login">
+      <input type="password" id="admin-password" placeholder="Enter password" />
+      <button id="admin-login-btn" onclick="loginToAdmin()">Login</button>
+    </div>
+    <div id="admin-panel" style="display: none;">
+      <h3>Admin Controls</h3>
+      <p>Welcome to the admin panel!</p>
+      <button onclick="clearCache()">Clear Cache</button>
+      <button onclick="viewLogs()">View Logs</button>
+      <button onclick="logoutAdmin()">Logout</button>
+    </div>
   </div>
 
   <!-- Load UV bundle -->
   <script src="/uv/uv.bundle.js"></script>
 
   <script>
+    let isAdminLoggedIn = false;
+
+    function showTab(tabName) {
+      // Hide all tabs
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      // Remove active class from all tab buttons
+      const tabButtons = document.querySelectorAll('.tab');
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function openGame(url) {
+      window.location.href = '/uv/' + url;
+    }
+
+    function openApp(url) {
+      window.location.href = '/uv/' + url;
+    }
+
+    function loginToAdmin() {
+      const password = document.getElementById('admin-password').value;
+      if (password === 'sumrall piggy') {
+        isAdminLoggedIn = true;
+        document.getElementById('admin-panel').style.display = 'block';
+        document.getElementById('admin-password').style.display = 'none';
+        document.getElementById('admin-login-btn').style.display = 'none';
+      } else {
+        alert('Incorrect password!');
+      }
+    }
+
+    function clearCache() {
+      if (confirm('Are you sure you want to clear the cache?')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        alert('Cache cleared!');
+      }
+    }
+
+    function viewLogs() {
+      alert('No logs available at this time.');
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('admin-password').style.display = 'inline-block';
+      document.getElementById('admin-login-btn').style.display = 'inline-block';
+      document.getElementById('admin-password').value = '';
+    }
+
     window.onload = () => {
       document.getElementById('status').textContent = 'Initializing...';
 
