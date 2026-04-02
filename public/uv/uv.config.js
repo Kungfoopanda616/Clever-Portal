@@ -1,11 +1,10 @@
-// uv.config.js
-self.uvConfig = {
-  paths: {
-    prefix: '/uv/',          // base URL prefix
-    bundle: 'uv.bundle.js',  // bundle filename
-    handler: 'uv.handler.js',// handler filename
-    worker: 'uv.sw.js',      // worker filename
-    config: 'uv.config.js'   // config filename
-  },
-  // add other options if needed
+self.__uv$config = {
+  prefix: '/uv/',
+  bare: 'https://uv.radon.games/bare/',
+  encodeUrl: Ultraviolet.codec.xor.encode,
+  decodeUrl: Ultraviolet.codec.xor.decode,
+  handler: '/uv/uv.handler.js',
+  bundle: '/uv/uv.bundle.js',
+  config: '/uv/uv.config.js',
+  sw: '/uv/uv.sw.js',
 };

@@ -3,10 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <title>UV Proxy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .search-container {
+      margin: 20px 0;
+    }
+    #search-input {
+      width: 70%;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 25px;
+      outline: none;
+    }
+    #search-input:focus {
+      border-color: #4CAF50;
+    }
+    #search-btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    #search-btn:hover {
+      background-color: #45a049;
+    }
+    #status {
+      margin: 20px 0;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>UV Proxy</h1>
   <div id="status">Loading...</div>
+  
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Enter URL or search..." />
+    <button id="search-btn">Go</button>
+  </div>
 
   <!-- Load UV bundle -->
   <script src="/uv/uv.bundle.js"></script>
@@ -16,10 +61,38 @@
       document.getElementById('status').textContent = 'Initializing...';
 
       // Check UV loaded
-      if (typeof UV !== 'undefined') {
+      if (typeof Ultraviolet !== 'undefined') {
         document.getElementById('status').textContent = 'UV loaded!';
-        // Initialize UV or your proxy logic here
-        // For example, UV.setup() if needed
+        
+        // Set up search functionality
+        const searchInput = document.getElementById('search-input');
+        const searchBtn = document.getElementById('search-btn');
+        
+        function navigateToUrl() {
+          const url = searchInput.value.trim();
+          if (url) {
+            // Check if it's a full URL or needs to be treated as a search
+            let targetUrl;
+            if (url.includes('.') && !url.includes(' ')) {
+              // Likely a URL
+              targetUrl = url.startsWith('http') ? url : 'https://' + url;
+            } else {
+              // Treat as search query
+              targetUrl = 'https://www.google.com/search?q=' + encodeURIComponent(url);
+            }
+            
+            // Navigate through UV proxy
+            window.location.href = '/uv/' + targetUrl;
+          }
+        }
+        
+        searchBtn.addEventListener('click', navigateToUrl);
+        searchInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            navigateToUrl();
+          }
+        });
+        
       } else {
         document.getElementById('status').textContent = 'Failed to load UV.';
         console.error('UV not loaded.');
