@@ -588,14 +588,36 @@
           <option value="60000">1 minute</option>
           <option value="300000">5 minutes</option>
           <option value="600000">10 minutes</option>
+          <option value="custom">Custom...</option>
         </select>
+        <input type="number" id="custom-timeout" class="custom-timeout-input" placeholder="Seconds" style="display: none; width: 100px;" />
         <button class="timeout-btn" onclick="timeoutUser()">Timeout</button>
         <button class="ban-btn" onclick="banUser()">Ban</button>
-        <button class="unban-btn" onclick="unbanUser()">Unban/Untimeout</button>
+        <button class="show-banned-btn" onclick="toggleBannedPanel()">Show Banned Users</button>
       </div>
-      <div class="user-list-section">
-        <strong>Banned/Timed out users:</strong>
-        <span id="banned-list">None</span>
+      <div class="banned-panel" id="banned-panel">
+        <h4>Banned & Timed Out Users</h4>
+        <div id="banned-users-list"></div>
+      </div>
+    </div>
+    
+    <!-- Mod Action Modal -->
+    <div class="mod-modal-overlay" id="mod-modal-overlay" onclick="closeModModal()"></div>
+    <div class="mod-modal" id="mod-modal">
+      <h4>Moderate: <span id="mod-target-user"></span></h4>
+      <label>Timeout Duration:</label>
+      <select id="modal-timeout-duration" class="custom-timeout-input">
+        <option value="30000">30 seconds</option>
+        <option value="60000">1 minute</option>
+        <option value="300000">5 minutes</option>
+        <option value="600000">10 minutes</option>
+        <option value="custom">Custom (seconds)</option>
+      </select>
+      <input type="number" id="modal-custom-timeout" class="custom-timeout-input" placeholder="Enter seconds" style="display: none;" />
+      <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <button class="timeout-btn" onclick="modalTimeoutUser()">Timeout</button>
+        <button class="ban-btn" onclick="modalBanUser()">Ban</button>
+        <button class="unban-btn" onclick="closeModModal()">Cancel</button>
       </div>
     </div>
   </div>
@@ -862,7 +884,15 @@
       const container = document.getElementById('chat-messages');
       const msgDiv = document.createElement('div');
       msgDiv.className = 'chat-message' + (isOwn ? ' own' : '') + (username === 'Admin' ? ' admin' : '');
-      msgDiv.innerHTML = '<strong>' + escapeHtml(username) + ':</strong> ' + escapeHtml(message);
+      
+      let html = '<strong>' + escapeHtml(username) + ':</strong> ' + escapeHtml(message);
+      
+      // Add mod button if user is admin and message is not from admin/system
+      if (isAdminLoggedIn && username !== 'Admin') {
+        html += '<button class="mod-btn" onclick="openModModal(\'' + escapeHtml(username) + '\')">Mod</button>';
+      }
+      
+      msgDiv.innerHTML = html;
       container.appendChild(msgDiv);
       container.scrollTop = container.scrollHeight;
     }
@@ -964,6 +994,164 @@
     function updateBannedList() {
       const allRestricted = [...bannedUsers, ...timedOutUsers.keys()];
       document.getElementById('banned-list').textContent = allRestricted.length > 0 ? allRestricted.join(', ') : 'None';
+      renderBannedUsersList();
+    }
+
+    // Modal functions
+    let currentModTarget = null;
+
+    function openModModal(username) {
+      if (!isAdminLoggedIn) return;
+      currentModTarget = username;
+      document.getElementById('mod-target-user').textContent = username;
+      document.getElementById('mod-modal').classList.add('active');
+      document.getElementById('mod-modal-overlay').classList.add('active');
+      document.getElementById('modal-custom-timeout').style.display = 'none';
+    }
+
+    function closeModModal() {
+      document.getElementById('mod-modal').classList.remove('active');
+      document.getElementById('mod-modal-overlay').classList.remove('active');
+      currentModTarget = null;
+    }
+
+    function modalTimeoutUser() {
+      if (!currentModTarget) return;
+      
+      let duration = parseInt(document.getElementById('modal-timeout-duration').value);
+      if (document.getElementById('modal-timeout-duration').value === 'custom') {
+        const customSeconds = parseInt(document.getElementById('modal-custom-timeout').value);
+        if (!customSeconds || customSeconds < 1) {
+          alert('Please enter a valid timeout duration in seconds');
+          return;
+        }
+        duration = customSeconds * 1000;
+      }
+      
+      timedOutUsers.set(currentModTarget, Date.now() + duration);
+      if (chatUsers.has(currentModTarget)) {
+        chatUsers.get(currentModTarget).timedOut = true;
+      }
+      addSystemMessage(currentModTarget + ' has been timed out for ' + (duration / 1000) + ' seconds');
+      updateUserList();
+      updateBannedList();
+      closeModModal();
+    }
+
+    function modalBanUser() {
+      if (!currentModTarget) return;
+      
+      bannedUsers.add(currentModTarget);
+      chatUsers.delete(currentModTarget);
+      addSystemMessage(currentModTarget + ' has been banned from the chat');
+      updateUserList();
+      updateUserCount();
+      updateBannedList();
+      closeModModal();
+    }
+
+    // Banned panel functions
+    function toggleBannedPanel() {
+      const panel = document.getElementById('banned-panel');
+      panel.classList.toggle('active');
+      renderBannedUsersList();
+    }
+
+    function renderBannedUsersList() {
+      const container = document.getElementById('banned-users-list');
+      container.innerHTML = '';
+      
+      const allBanned = Array.from(bannedUsers);
+      const allTimedOut = Array.from(timedOutUsers.entries());
+      
+      if (allBanned.length === 0 && allTimedOut.length === 0) {
+        container.innerHTML = '<p>No banned or timed out users</p>';
+        return;
+      }
+      
+      allBanned.forEach(username => {
+        const div = document.createElement('div');
+        div.className = 'banned-user-item';
+        div.innerHTML = `
+          <span><span class="banned-label">BANNED:</span> ${escapeHtml(username)}</span>
+          <button class="unban-btn" onclick="quickUnbanUser('${escapeHtml(username)}')">Unban</button>
+        `;
+        container.appendChild(div);
+      });
+      
+      allTimedOut.forEach(([username, endTime]) => {
+        const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+        const div = document.createElement('div');
+        div.className = 'banned-user-item';
+        div.innerHTML = `
+          <span><span class="timeout-label">TIMEOUT:</span> ${escapeHtml(username)} (${remaining}s remaining)</span>
+          <button class="unban-btn" onclick="quickUnbanUser('${escapeHtml(username)}')">Remove Timeout</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function quickUnbanUser(username) {
+      bannedUsers.delete(username);
+      timedOutUsers.delete(username);
+      if (chatUsers.has(username)) {
+        chatUsers.get(username).timedOut = false;
+      }
+      addSystemMessage(username + ' has been unbanned/untimeout');
+      updateUserList();
+      updateBannedList();
+      renderBannedUsersList();
+    }
+
+    // Show custom timeout input when custom is selected
+    document.getElementById('timeout-duration').addEventListener('change', function() {
+      const customInput = document.getElementById('custom-timeout');
+      if (this.value === 'custom') {
+        customInput.style.display = 'inline-block';
+      } else {
+        customInput.style.display = 'none';
+      }
+    });
+
+    document.getElementById('modal-timeout-duration').addEventListener('change', function() {
+      const customInput = document.getElementById('modal-custom-timeout');
+      if (this.value === 'custom') {
+        customInput.style.display = 'block';
+      } else {
+        customInput.style.display = 'none';
+      }
+    });
+
+    function timeoutUser() {
+      const username = document.getElementById('mod-user-select').value;
+      let duration = parseInt(document.getElementById('timeout-duration').value);
+      
+      if (!username) {
+        alert('Please select a user');
+        return;
+      }
+      
+      if (username === 'Admin') {
+        alert('Cannot timeout admin!');
+        return;
+      }
+      
+      if (document.getElementById('timeout-duration').value === 'custom') {
+        const customSeconds = parseInt(document.getElementById('custom-timeout').value);
+        if (!customSeconds || customSeconds < 1) {
+          alert('Please enter a valid timeout duration in seconds');
+          return;
+        }
+        duration = customSeconds * 1000;
+      }
+      
+      timedOutUsers.set(username, Date.now() + duration);
+      if (chatUsers.has(username)) {
+        chatUsers.get(username).timedOut = true;
+      }
+      addSystemMessage(username + ' has been timed out for ' + (duration / 1000) + ' seconds');
+      updateUserList();
+      updateBannedList();
     }
 
     window.onload = () => {
