@@ -1258,7 +1258,11 @@
       initChat();
 
       // Check UV loaded
-      if (typeof Ultraviolet !== 'undefined') {
+      console.log('Ultraviolet object:', typeof Ultraviolet);
+      console.log('Ultraviolet.codec:', Ultraviolet?.codec);
+      console.log('Ultraviolet.codec.xor:', Ultraviolet?.codec?.xor);
+      
+      if (typeof Ultraviolet !== 'undefined' && Ultraviolet.codec && Ultraviolet.codec.xor) {
         document.getElementById('status').textContent = 'UV loaded!';
         
         // Set up search functionality

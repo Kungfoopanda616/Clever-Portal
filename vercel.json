@@ -1,12 +1,33 @@
 {
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/uv/service/(.*)",
-      "destination": "/uv/uv.sw.js"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/uv/(.*)",
+      "dest": "/index.html"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/uv/(.*)",
+      "headers": [
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
     }
   ]
 }
