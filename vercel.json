@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/uv/(.*)",
+      "destination": "/uv/uv.sw.js"
+    },
+    {
+      "source": "/((?!uv/).*)",
       "destination": "/index.html"
     }
   ]
