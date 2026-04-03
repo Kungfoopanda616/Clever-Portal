@@ -12,5 +12,14 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true
+  },
+  server: {
+    proxy: {
+      '/uv/': {
+        target: 'https://uv.radon.games',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/uv/, '')
+      }
+    }
   }
 });

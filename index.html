@@ -743,8 +743,8 @@
     </div>
   </div>
 
-  <!-- Load UV bundle -->
-  <script src="/uv/uv.bundle.js"></script>
+  <!-- Load UV bundle from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@titaniumnetwork-dev/ultraviolet@3.2.7/dist/uv.bundle.js"></script>
 
   <script>
     let isAdminLoggedIn = false;
@@ -762,13 +762,23 @@
     }
 
     function openGame(url) {
-      const encodedUrl = Ultraviolet.codec.xor.encode(url);
-      window.location.href = '/uv/' + encodedUrl;
+      try {
+        const encodedUrl = Ultraviolet.codec.xor.encode(url);
+        window.location.href = '/uv/' + encodedUrl;
+      } catch (err) {
+        console.error('UV encoding failed:', err);
+        window.location.href = '/uv/' + url;
+      }
     }
 
     function openApp(url) {
-      const encodedUrl = Ultraviolet.codec.xor.encode(url);
-      window.location.href = '/uv/' + encodedUrl;
+      try {
+        const encodedUrl = Ultraviolet.codec.xor.encode(url);
+        window.location.href = '/uv/' + encodedUrl;
+      } catch (err) {
+        console.error('UV encoding failed:', err);
+        window.location.href = '/uv/' + url;
+      }
     }
 
     function loginToAdmin() {
@@ -1264,9 +1274,17 @@
             } else {
               targetUrl = 'https://www.google.com/search?q=' + encodeURIComponent(url);
             }
-            // Encode URL with Ultraviolet XOR codec
-            const encodedUrl = Ultraviolet.codec.xor.encode(targetUrl);
-            window.location.href = '/uv/' + encodedUrl;
+            try {
+              // Encode URL with Ultraviolet XOR codec
+              const encodedUrl = Ultraviolet.codec.xor.encode(targetUrl);
+              console.log('Original URL:', targetUrl);
+              console.log('Encoded URL:', encodedUrl);
+              window.location.href = '/uv/' + encodedUrl;
+            } catch (err) {
+              console.error('UV encoding failed:', err);
+              // Fallback: try without encoding
+              window.location.href = '/uv/' + targetUrl;
+            }
           }
         }
         
